@@ -33,7 +33,7 @@
 					<div class="col-sm-6">
 						<div class="contactinfo">
 							<ul class="nav nav-pills">
-							<li><a href="index_rwd.jsp"><img src="images/egobox_logo_s.jpeg" width="128" height="49" alt="egobox logo" /></a></li>
+							<li><a href="index_rwd.jsp"><img src="images/egobox_logo_s.jpg" width="128" height="49" alt="egobox logo" /></a></li>
 							</ul>
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 							
 							<ul class="nav navbar-nav collapse navbar-collapse">
 							
-								<li><a href="index_rwd.jsp" class="active">購樂生活館</a></li>
+								<li><a href="index_rwd.jsp" class="active">銘頂食品行</a></li>
 								<li class="dropdown"><a href="#">買東西<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="#">商品</a></li>
@@ -460,7 +460,7 @@
 					</div>
 					<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
-							<h2>購樂生活館</h2>
+							<h2>銘頂食品行</h2>
 							<form action="#" class="searchform">
 								
 								<p>
