@@ -1,4 +1,29 @@
 <%@ page language="java" contentType="text/html;charset=utf-8"%>
+<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
+<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.EmbeddedEntity" %>
+<%@ page import="com.google.appengine.api.datastore.Entity" %>
+<%@ page import="com.google.appengine.api.datastore.EntityNotFoundException" %>
+<%@ page import="com.google.appengine.api.datastore.Key" %>
+<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ page import="com.google.appengine.api.datastore.KeyRange" %>
+
+<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
+<%@ page import="com.google.appengine.api.datastore.PreparedQuery" %>
+<%@ page import="com.google.appengine.api.datastore.PreparedQuery.TooManyResultsException" %>
+<%@ page import="com.google.appengine.api.datastore.Query" %>
+<%@ page import="com.google.appengine.api.datastore.Query.CompositeFilter" %>
+<%@ page import="com.google.appengine.api.datastore.Query.CompositeFilterOperator" %>
+<%@ page import="com.google.appengine.api.datastore.Query.Filter" %>
+<%@ page import="com.google.appengine.api.datastore.Query.FilterOperator" %>
+<%@ page import="com.google.appengine.api.datastore.Query.FilterPredicate" %>
+<%@ page import="com.google.appengine.api.datastore.Query.SortDirection" %>
+
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +48,20 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+    
+    <%
+						DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();    
+					    Filter propertyFilter = new FilterPredicate("promote", FilterOperator.GREATER_THAN_OR_EQUAL, true);
+					    Query q = new Query("Product").setFilter(propertyFilter);
+					    List<Entity> results =
+					        datastore.prepare(q.setKeysOnly()).asList(FetchOptions.Builder.withDefaults());
+					        
+					        Filter propertyFilterActive = new FilterPredicate("active", FilterOperator.GREATER_THAN_OR_EQUAL, true);
+					    Query q_acitve = new Query("Product").setFilter(propertyFilterActive);
+					    List<Entity> results_active =
+					        datastore.prepare(q_acitve.setKeysOnly()).asList(FetchOptions.Builder.withDefaults());
+					       
+					      %>
 </head><!--/head-->
 
 <body>
@@ -68,9 +107,7 @@
 							</button>
 						</div>
 						<div class="mainmenu pull-left">
-							
 							<ul class="nav navbar-nav collapse navbar-collapse">
-							
 								<li><a href="index_rwd.jsp" class="active">銘頂食品行</a></li>
 								<li class="dropdown"><a href="#">買東西<i class="fa fa-angle-down"></i></a>
                                     <ul role="menu" class="sub-menu">
@@ -79,7 +116,6 @@
                                 </li> 
 								<li><a href="form.pdf" target="_blank">團購單</a></li>
 								<li><a href="#">聯絡我們</a></li>
-								
 							</ul>
 						</div>
 					</div>
@@ -102,36 +138,32 @@
 						<div class="carousel-inner">
 							<div class="item active">
 								<div class="col-sm-6">
-									<h1><span>原味乳酪絲</span></h1>
-									<h2>150克NT$200元</h2>
+									<h1><span>團購單</span></h1>
+									<h2>FREE</h2>
 									<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986532" target="_blank">我要購買</a></button>
 								</div>
 								<div class="col-sm-6">
-									<img src="http://f.shopee.tw/file/8f47d7d880c3ba90299d7f198c57edfc" class="girl img-responsive" alt="" />
-								</div>
-							</div>
-							<div class="item">
-								<div class="col-sm-6">
-									<h1><span>韓國大花菇</span></h1>
-									<h2> 约200克 售NT$390元</h2>
-									<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=8080558" target="_blank">我要購買</a></button>
-								</div>
-								<div class="col-sm-6">
-									<img src="http://f.shopee.tw/file/555317556f039989991d801ac1e0dcd0" class="girl img-responsive" alt="" />
+									<img src="http://cf.shopee.tw/file/f5b567b8eccad5bb0fa36d02fcd37fdf" class="girl img-responsive" alt="" />
 								</div>
 							</div>
 							
+							<% 
+					        for(int i=0;i<results.size();i++){
+							    Entity got = datastore.get(results.get(i).getKey());
+							 %>
 							<div class="item">
-								<div class="col-sm-6">
-									<h1><span>愛佳寶 丼碗十件式</span></h1>
-									<h2>(5碗5蓋)NT$250</h2>
-									<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=7648315" target="_blank">我要購買</a></button>
+									<div class="col-sm-6">
+										<h1><span><%=got.getProperty("productName")%></span></h1>
+										<h2><%=got.getProperty("productWeight")%>NT$<%=got.getProperty("productPrice")%>元</h2>
+										<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986532" target="_blank">我要購買</a></button>
+									</div>
+									<div class="col-sm-6">
+										<img src="<%=got.getProperty("imgURL")%>" class="girl img-responsive" alt="" />
+									</div>
 								</div>
-								<div class="col-sm-6">
-									<img src="http://f.shopee.tw/file/d4f7aa728ef6d6a9e8c40ccc2a5cd4c5" class="girl img-responsive" alt="" />
-								</div>
-							</div>
-							
+							<%
+							}
+							 %>
 						</div>
 						
 						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
@@ -198,243 +230,32 @@
 				<div class="col-sm-9 padding-right">
 					<div class="features_items"><!--features_items-->
 						<h2 class="title text-center">購物商品</h2>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/28e8ae097b2143c5e83c32ca3c4a6bc9_tn" alt="" />
-											<h2>NT$120元</h2>
-											<p>蜜腰果約110克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=8690009" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/8f47d7d880c3ba90299d7f198c57edfc_tn" alt="" />
-											<h2>NT$200元</h2>
-											<p>原味乳酪絲 150克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986532" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/a82a6b117587558ff84e15ea3dc0ed45_tn" alt="" />
-											<h2>NT$100元</h2>
-											<p>養生什錦綜合果仁 200克 </p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7813007" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/f7ce5a7abda60548ae10fb241f1fead1_tn" alt="" />
-											<h2>NT$220元</h2>
-											<p>原片 黑胡椒豬肉薄片肉乾 200克 </p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7812920" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/3882842971ef7d0494be23f0b9b5ed86_tn" alt="" />
-											<h2>NT$100元</h2>
-											<p>椒麻花生 200克 </p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7813221" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/555317556f039989991d801ac1e0dcd0_tn" alt="" />
-											<h2>NT$390元</h2>
-											<p>韓國大花菇 约200克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=8080558" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/3247b9a8026146ac6ff57d467db75f93_tn" alt="" />
-											<h2>NT$520元</h2>
-											<p>智利鮑魚罐大2粒入 约425克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7987639" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/3247b9a8026146ac6ff57d467db75f93_tn" alt="" />
-											<h2>NT$450元</h2>
-											<p>智利鮑魚罐大3粒入 约425克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7987607" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/37d7770dee26bd295272b1c179b73a40_tn" alt="" />
-											<h2>NT$600元</h2>
-											<p>年貨大街4兩多烏魚子1片</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7987154" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/07338d27fad5cbc3cbf6050b888f650b_tn" alt="" />
-											<h2>NT$220元</h2>
-											<p>豬肉薄片肉乾原味 200克 NT220元</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986848" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/05430689f86691bb1cb4ad7449c1c2bd_tn" alt="" />
-											<h2>NT$820元</h2>
-											<p>年貨大街3兩多烏魚子2片盒裝</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7726064" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/d339699233818bbee55db21048e6106c_tn" alt="" />
-											<h2>NT$120元</h2>
-											<p>蜜核桃仁120克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7902262" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/9c65b83d6bc28fd9c5619b5e99be0a9d_tn" alt="" />
-											<h2>NT$300元</h2>
-											<p>蜜核桃仁 300克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7813400" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/12e3e6055395e2da9997b9016bc64f6e_tn" alt="" />
-											<h2>NT$400元</h2>
-											<p>蜜腰果450克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7813129" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/5fe217ea986ecc19a0fcf7ad3608b005_tn" alt="" />
-											<h2>NT$400元</h2>
-											<p>年貨大街3兩多烏魚子1片</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7726814" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/6f206e604eb3d01318837311e27e624b_tn" alt="" />
-											<h2>NT$200元</h2>
-											<p>蜜汁豬肉乾 200克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7812816" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/74588608965faea9afb1bbad6ff619e4_tn" alt="" />
-											<h2>NT$250元</h2>
-											<p>香辣牛肉乾 200克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7812708" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/50152484f9853bda3fc17651e8e2d9fc_tn" alt="" />
-											<h2>NT$380元</h2>
-											<p>台灣香菇一袋200克</p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7812554" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="product-image-wrapper">
-								<div class="single-products">
-										<div class="productinfo text-center">
-											<img src="http://f.shopee.tw/file/d4f7aa728ef6d6a9e8c40ccc2a5cd4c5_tn" alt="" />
-											<h2>NT$250元</h2>
-											<p>愛佳寶 丼碗十件式(5碗5蓋) </p>
-											<a href="https://mall.shopee.tw/item/?sid=2965735&iid=7648315" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
-										</div>
-								</div>
-							</div>
-						</div>
+						
+						<% 
+					        for(int i=0;i<results_active.size();i++){
+							    Entity got = datastore.get(results_active.get(i).getKey());
+							 %>
+								 <div class="col-sm-4">
+									<div class="product-image-wrapper">
+									<div class="single-products">
+											<div class="productinfo text-center">
+												<img src='<%=got.getProperty("imgURL")%>' alt="" />
+												<h2>NT$<%=got.getProperty("productPrice")%>元</h2>
+												<p><%=got.getProperty("productName")%>約<%=got.getProperty("productWeight")%></p>
+												<a href="https://mall.shopee.tw/item/?sid=2965735&iid=8690009" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
+											</div>
+									</div>
+									</div>
+								</div>		
+							<%
+							}
+							 %>
 						
 						
 						
 						
 						
 					</div><!--features_items-->
-					
-					
-					
 				</div>
 			</div>
 		</div>
@@ -485,8 +306,6 @@
 		</div>
 		
 	</footer><!--/Footer-->
-	
-
   
     <script src="js/jquery.js"></script>
 	<script src="js/bootstrap.min.js"></script>
