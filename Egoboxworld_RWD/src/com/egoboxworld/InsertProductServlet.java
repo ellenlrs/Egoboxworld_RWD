@@ -41,6 +41,7 @@ public class InsertProductServlet extends HttpServlet {
 		String imgURL=req.getParameter("imgURL")==null?"":req.getParameter("imgURL");
 		String promote_s=req.getParameter("promote")==null?"false":req.getParameter("promote");
 		boolean promote=promote_s.equals("false")?false:true;
+		String shippingURL=req.getParameter("shippingURL")==null?"":req.getParameter("shippingURL");
 		
 		try {
 			// [START kind_example]
@@ -55,6 +56,7 @@ public class InsertProductServlet extends HttpServlet {
 		    employee.setProperty("active", active);
 		    employee.setProperty("imgURL", imgURL);
 		    employee.setProperty("promote", promote);
+		    employee.setProperty("shippingURL", shippingURL);
 		    datastore.put(employee);
 		    // [END kind_example]
 
@@ -68,6 +70,7 @@ public class InsertProductServlet extends HttpServlet {
 		    resp.getWriter().println("active:"+got.getProperty("active"));
 		    resp.getWriter().println("imgURL:"+got.getProperty("imgURL"));
 		    resp.getWriter().println("promote:"+got.getProperty("promote"));
+		    resp.getWriter().println("shippingURL:"+got.getProperty("shippingURL"));
 		  
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -140,7 +140,7 @@
 								<div class="col-sm-6">
 									<h1><span>團購單</span></h1>
 									<h2>FREE</h2>
-									<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986532" target="_blank">我要購買</a></button>
+									<button type="button" class="btn btn-default get"><a href="http://mall.shopee.tw/item/?sid=2965735&iid=12139206" target="_blank">我要購買</a></button>
 								</div>
 								<div class="col-sm-6">
 									<img src="http://cf.shopee.tw/file/f5b567b8eccad5bb0fa36d02fcd37fdf" class="girl img-responsive" alt="" />
@@ -155,7 +155,7 @@
 									<div class="col-sm-6">
 										<h1><span><%=got.getProperty("productName")%></span></h1>
 										<h2><%=got.getProperty("productWeight")%>NT$<%=got.getProperty("productPrice")%>元</h2>
-										<button type="button" class="btn btn-default get"><a href="https://mall.shopee.tw/item/?sid=2965735&iid=7986532" target="_blank">我要購買</a></button>
+										<button type="button" class="btn btn-default get"><a href="<%=got.getProperty("shippingURL")%>" target="_blank">我要購買</a></button>
 									</div>
 									<div class="col-sm-6">
 										<img src="<%=got.getProperty("imgURL")%>" class="girl img-responsive" alt="" />
@@ -242,7 +242,7 @@
 												<img src='<%=got.getProperty("imgURL")%>' alt="" />
 												<h2>NT$<%=got.getProperty("productPrice")%>元</h2>
 												<p><%=got.getProperty("productName")%>約<%=got.getProperty("productWeight")%></p>
-												<a href="https://mall.shopee.tw/item/?sid=2965735&iid=8690009" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
+												<a href="<%=got.getProperty("shippingURL")%>" class="btn btn-default add-to-cart" target="_blank"><i class="fa fa-shopping-cart"></i>我要購買</a>
 											</div>
 									</div>
 									</div>

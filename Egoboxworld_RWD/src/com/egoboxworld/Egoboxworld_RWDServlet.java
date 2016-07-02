@@ -73,6 +73,7 @@ public class Egoboxworld_RWDServlet extends HttpServlet {
 		    employee.setProperty("active", true);
 		    employee.setProperty("imgURL", "http://cf.shopee.tw/file/df496e0f867a64a997c8ccfae52a8e57");
 		    employee.setProperty("promote", true);
+		    employee.setProperty("shippingURL", "https://mall.shopee.tw/item/?sid=2965735&iid=7813007");
 		    datastore.put(employee);
 		    // [END kind_example]
 
